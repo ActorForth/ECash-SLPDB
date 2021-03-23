@@ -201,6 +201,13 @@ class _SlpGraphSearchManager:
         self._gui_object().config.set_key('slp_validator_graphsearch_enabled', enable)
 
     @property
+    def slpdb_validation_enabled(self):
+        return self._gui_object().config.get('slp_validator_slpdb_validation_enabled', False)
+
+    def _set_slpdb_validation_enabled(self, enable):
+        self._gui_object().config.set_key('slp_validator_slpdb_validation_enabled', enable)
+
+    @property
     def gs_host(self):
         host = self._gui_object().config.get('slp_validator_graphsearch_host', '')
         # handle case for upgraded config key name
@@ -216,6 +223,36 @@ class _SlpGraphSearchManager:
     #     if not self.slp_validation_fetch_signal:
     #         return
     #     self.slp_validation_fetch_signal.emit(data)
+
+    @property
+    def slpdb_host(self):
+        host = self._gui_object().config.get('slp_validator_slpdb_host', '')
+        # handle case for upgraded config key name
+        if not host:
+            host = self._gui_object().config.get('slp_slpdb_host', '')
+            if not host: self.set_slpdb_host(host)
+        return host
+
+    def set_slpdb_host(self, host):
+        self._gui_object().config.set_key('slp_validator_slpdb_host', host)
+
+    @property
+    def slpdb_confirmations(self):
+        confirmations = self._gui_object().config.get('slp_validator_slpdb_confirmations', 0)
+        # handle case for upgraded config key name
+        if not confirmations:
+            confirmations = self._gui_object().config.get('slp_validator_slpdb_confirmations', 0)
+            if not confirmations: self.set_slpdb_host(confirmations)
+        return confirmations
+    
+    def set_slpdb_confirmations(self, amount):
+        self._gui_object().config.set_key('slp_validator_slpdb_confirmations', amount)
+        print(f"new config amount: {self.slpdb_confirmations}")
+
+    def _emit_ui_update(self, data):
+        if not self.slp_validation_fetch_signal:
+            return
+        self.slp_validation_fetch_signal.emit(data)
 
     def get_gs_job(self, valjob):
         """
@@ -253,11 +290,34 @@ class _SlpGraphSearchManager:
         # delete all the gs jobs
         self._search_jobs.clear()
 
+        #disable slpdb validation
+        self._set_slpdb_validation_enabled(False)
+
         self._set_gs_enabled(enable)
 
         # activate slp in each wallet
         for wallet in wallets:
             if wallet: wallet.activate_slp()
+
+    def toggle_slpdb_validation(self, enable):
+        if self.slpdb_validation_enabled == enable:
+            return
+
+        self.toggle_graph_search(False)
+
+        self._set_slpdb_validation_enabled(enable)
+
+    def remove_search_job(self, root_txid):
+        with self.lock:
+            self._search_jobs.pop(root_txid, None)
+
+    def is_job_failed(self, root_txid):
+        with self.lock:
+            if root_txid in self._search_jobs.keys() \
+                and self._search_jobs[root_txid].job_complete \
+                and not self._search_jobs[root_txid].search_success:
+                return True
+            return False
 
     def find(self, root_txid):
         return self._search_jobs.get(root_txid, None)
@@ -309,14 +369,10 @@ class _SlpGraphSearchManager:
         # setup post url/query based on gs server kind
         kind = 'bchd'
         host = slp_gs_mgr.gs_host
-<<<<<<< HEAD
         cache = []
-        if networks.net.SLPDB_SERVERS.get(host):
-            kind = networks.net.SLPDB_SERVERS.get(host)["kind"]
-=======
+        
         if networks.net.SLP_GS_SERVERS.get(host):
             kind = networks.net.SLP_GS_SERVERS.get(host)["kind"]
->>>>>>> changed occurances of slpdb to gs
         if kind == 'gs++':
             url = host + "/v1/graphsearch/graphsearch"
             query_json = { "txid": txid } # TODO: handle 'validity_cache' exclusion from graph search (NOTE: this will impact total dl count)

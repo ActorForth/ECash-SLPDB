@@ -75,7 +75,7 @@ from .contacts import Contacts
 from . import cashacct
 
 from .slp import SlpMessage, SlpParsingError, SlpUnsupportedSlpTokenType, SlpNoMintingBatonFound, OpreturnError
-from . import slp_validator_0x01, slp_validator_0x01_nft1
+from . import slp_validator_0x01, slp_validator_0x01_nft1, slp_slpdb_validator
 from .slp_graph_search import slp_gs_mgr
 
 
@@ -1863,6 +1863,15 @@ class Abstract_Wallet(PrintError, SPVDelegate):
                                                         debug=2 if is_verbose else 1,  # set debug=2 here to see the verbose dag when running with -v
                                                         reset=False)
             elif tti['type'] in ['SLP65', 'SLP129']:
+                if slp_gs_mgr.slpdb_validation_enabled:
+                    try:
+                        result = slp_slpdb_validator.check_validity(tx_hash)
+                        if result >= slp_gs_mgr.slpdb_confirmations:
+                            tti['validity'] = 1
+                        return
+                    except:
+                        raise(Exception)
+
                 job = self.slp_graph_0x01_nft.make_job(tx, self, self.network, nft_type=tti['type'],
                                                         debug=2 if is_verbose else 1,  # set debug=2 here to see the verbose dag when running with -v
                                                         reset=False)
