@@ -11,8 +11,8 @@ a Graph Search server see:
 This class is currently only used by slp_validator_0x01.py.
 The NFT1 validator has not yet been attached to the NFT1 validator.
 
-Servers can be added or removed using "lib/servers_slpdb.json" and 
-"lib/servers_slpdb_testnet.json".  Currently only the bchd has been tested
+Servers can be added or removed using "lib/servers_gs.json" and 
+"lib/servers_gs_testnet.json".  Currently only the bchd has been tested
 with the validation cache excludes.
 
 """
@@ -309,9 +309,14 @@ class _SlpGraphSearchManager:
         # setup post url/query based on gs server kind
         kind = 'bchd'
         host = slp_gs_mgr.gs_host
+<<<<<<< HEAD
         cache = []
         if networks.net.SLPDB_SERVERS.get(host):
             kind = networks.net.SLPDB_SERVERS.get(host)["kind"]
+=======
+        if networks.net.SLP_GS_SERVERS.get(host):
+            kind = networks.net.SLP_GS_SERVERS.get(host)["kind"]
+>>>>>>> changed occurances of slpdb to gs
         if kind == 'gs++':
             url = host + "/v1/graphsearch/graphsearch"
             query_json = { "txid": txid } # TODO: handle 'validity_cache' exclusion from graph search (NOTE: this will impact total dl count)

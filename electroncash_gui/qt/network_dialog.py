@@ -542,8 +542,8 @@ class SlpGsServeListWidget(QTreeWidget):
         self.setHeaderLabels([_('GS Server')]) #, _('Server Status')])
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.customContextMenuRequested.connect(self.create_menu)
-        if not slp_gs_mgr.gs_host and networks.net.SLPDB_SERVERS:  # Note: testnet4 and scalenet may have empty SLPDB_SERVERS
-            host = next(iter(networks.net.SLPDB_SERVERS))
+        if not slp_gs_mgr.gs_host and networks.net.SLP_GS_SERVERS:  # Note: testnet4 and scalenet may have empty SLP_GS_SERVERS
+            host = next(iter(networks.net.SLP_GS_SERVERS))
             slp_gs_mgr.set_gs_host(host)
         self.parent.slp_gs_server_host.setText(slp_gs_mgr.gs_host)
 
@@ -557,7 +557,7 @@ class SlpGsServeListWidget(QTreeWidget):
         menu.exec_(self.viewport().mapToGlobal(position))
 
     def select_slp_gs_server(self, server):
-        self.parent.set_slp_server(server)
+        self.parent.set_slp_gs_server(server)
         self.update()
 
     def keyPressEvent(self, event):
@@ -580,7 +580,7 @@ class SlpGsServeListWidget(QTreeWidget):
         restore_sel = None
         self.clear()
         self.addChild = self.addTopLevelItem
-        slp_gs_list = networks.net.SLPDB_SERVERS
+        slp_gs_list = networks.net.SLP_GS_SERVERS
         slp_gs_count = len(slp_gs_list)
         for node_url, item in slp_gs_list.items():
             if slp_gs_count > 0:
@@ -855,7 +855,7 @@ class NetworkChoiceLayout(QObject, PrintError):
         grid.addWidget(self.proxy_password, 7, 3)
         grid.setRowStretch(8, 1)
 
-        # SLP Validation Tab
+        # SLP GS Validation Tab
         grid = QGridLayout(slp_tab)
         self.slp_gs_enable_cb = QCheckBox(_('Use Graph Search to speed up slp token validation'))
         self.slp_gs_enable_cb.clicked.connect(self.use_slp_gs)
@@ -866,7 +866,7 @@ class NetworkChoiceLayout(QObject, PrintError):
         hbox.addWidget(QLabel(_('Server') + ':'))
         self.slp_gs_server_host = QLineEdit()
         self.slp_gs_server_host.setFixedWidth(250)
-        self.slp_gs_server_host.editingFinished.connect(lambda: weakSelf() and weakSelf().set_slp_server())
+        self.slp_gs_server_host.editingFinished.connect(lambda: weakSelf() and weakSelf().set_slp_gs_server())
         hbox.addWidget(self.slp_gs_server_host)
         hbox.addStretch(1)
         grid.addLayout(hbox, 1, 0)
@@ -1260,7 +1260,7 @@ class NetworkChoiceLayout(QObject, PrintError):
         auto_connect = self.autoconnect_cb.isChecked()
         self.network.set_parameters(host, port, protocol, proxy, auto_connect)
 
-    def set_slp_server(self, server=None):
+    def set_slp_gs_server(self, server=None):
         if not server:
             server = str(self.slp_gs_server_host.text())
         else:

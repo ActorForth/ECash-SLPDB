@@ -58,7 +58,7 @@ class MainNet(AbstractNet):
     GENESIS = "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"
     DEFAULT_PORTS = {'t': '50001', 's': '50002'}
     DEFAULT_SERVERS = _read_json_dict('servers.json')  # DO NOT MODIFY IN CLIENT CODE
-    SLPDB_SERVERS = _read_json_dict('servers_slpdb.json')
+    SLP_GS_SERVERS = _read_json_dict('servers_gs.json')
     POST_OFFICE_SERVERS = _read_json_dict('servers_post_office.json')
     TITLE = 'Electron Cash SLP'
 
@@ -109,7 +109,8 @@ class TestNet(AbstractNet):
     GENESIS = "000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943"
     DEFAULT_PORTS = {'t':'51001', 's':'51002'}
     DEFAULT_SERVERS = _read_json_dict('servers_testnet.json')  # DO NOT MODIFY IN CLIENT CODE
-    SLPDB_SERVERS = _read_json_dict('servers_slpdb_testnet.json')
+    SLP_GS_SERVERS = _read_json_dict('servers_gs_testnet.json')
+    SLP_SLPDB_SERVERS = _read_json_dict('servers_slpdb_testnet.json')
     POST_OFFICE_SERVERS = _read_json_dict('servers_post_office_testnet.json')
     TITLE = 'Electron Cash SLP Testnet'
     BASE_UNITS = {'tBCH': 8, 'mtBCH': 5, 'tbits': 2}
@@ -145,7 +146,7 @@ class TestNet4(TestNet):
     HEADERS_URL = "http://bitcoincash.com/files/testnet4_headers"  # Unused
 
     DEFAULT_SERVERS = _read_json_dict('servers_testnet4.json')  # DO NOT MODIFY IN CLIENT CODE
-    SLPDB_SERVERS = _read_json_dict('servers_slpdb_testnet4.json')  # Does not yet exist
+    SLP_GS_SERVERS = _read_json_dict('servers_gs_testnet4.json')  # Does not yet exist
     DEFAULT_PORTS = {'t': '62001', 's': '62002'}
 
     BITCOIN_CASH_FORK_BLOCK_HEIGHT = 6
@@ -172,7 +173,7 @@ class ScaleNet(TestNet):
     HEADERS_URL = "http://bitcoincash.com/files/scalenet_headers"  # Unused
 
     DEFAULT_SERVERS = _read_json_dict('servers_scalenet.json')  # DO NOT MODIFY IN CLIENT CODE
-    SLPDB_SERVERS = _read_json_dict('servers_slpdb_scalenet.json')  # Does not yet exist
+    SLPDB_GS_SERVERS = _read_json_dict('servers_gs_scalenet.json')  # Does not yet exist
     DEFAULT_PORTS = {'t': '63001', 's': '63002'}
 
     BITCOIN_CASH_FORK_BLOCK_HEIGHT = 6
