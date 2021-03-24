@@ -951,7 +951,7 @@ class NetworkChoiceLayout(QObject, PrintError):
         self.slp_slpdb_enable_cb.clicked.connect(self.slpdb_msg_box)
         self.slp_slpdb_enable_cb.setChecked(self.config.get('slp_validator_slpdb_validation_enabled', False))
         grid.addWidget(self.slp_slpdb_enable_cb, 0, 0, 1, 3)
-        self.add_slpdb_server_button = QPushButton("Addlibud Endpoint")
+        self.add_slpdb_server_button = QPushButton("Add Endpoint")
         self.add_slpdb_server_button.setFixedWidth(130)
         self.add_slpdb_server_button.clicked.connect(self.slpdb_endpoint_msg_box)
         grid.addWidget(self.add_slpdb_server_button, 1, 0, 1, 1)
