@@ -947,25 +947,20 @@ class NetworkChoiceLayout(QObject, PrintError):
 
         # SLP SLPDB Validation Tab
         grid = QGridLayout(slp_slpdb_tab)
-        self.slp_slpdb_enable_cb = QCheckBox(_('Use SLPDB to validate your tx. This is not trustless. This will disable Graph Search'))
-        self.slp_slpdb_enable_cb.clicked.connect(self.use_slp_slpdb)
+        self.slp_slpdb_enable_cb = QCheckBox(_('Use SLPDB to validate your tx (This will disable Graph Search)'))
+        self.slp_slpdb_enable_cb.clicked.connect(self.slpdb_msg_box)
         self.slp_slpdb_enable_cb.setChecked(self.config.get('slp_validator_slpdb_validation_enabled', False))
         grid.addWidget(self.slp_slpdb_enable_cb, 0, 0, 1, 3)
+        self.add_slpdb_server_button = QPushButton("Addlibud Endpoint")
+        self.add_slpdb_server_button.setFixedWidth(130)
+        self.add_slpdb_server_button.clicked.connect(self.slpdb_endpoint_msg_box)
+        grid.addWidget(self.add_slpdb_server_button, 1, 0, 1, 1)
 
-        hbox = QHBoxLayout()
-        hbox.addWidget(QLabel(_('Server') + ':'))
-        self.slp_sldpb_validation_server_host = QLineEdit()
-        self.slp_sldpb_validation_server_host.setFixedWidth(250)
-        self.slp_sldpb_validation_server_host.editingFinished.connect(lambda: weakSelf() and weakSelf().set_slp_slpdb_server())
-        hbox.addWidget(self.slp_sldpb_validation_server_host)
-        hbox.addStretch(1)
-        grid.addLayout(hbox, 1, 0)
 
         self.slp_slpdb_list_widget = SlpSLPDBServeListWidget(self)
         grid.addWidget(self.slp_slpdb_list_widget, 2, 0, 1, 5)
         self.slp_slpdb_list_widget.update()
         grid.addWidget(QLabel(_("Enter Acceptable Number of Successful Results:")), 3, 0)
-        # self.slp_search_job_list_widget = SlpSearchJobListWidget(self)
         
         self.slp_slider = QSlider(Qt.Horizontal)
         self.slp_slider.setValue(slp_gs_mgr.slpdb_confirmations)
@@ -1105,6 +1100,44 @@ class NetworkChoiceLayout(QObject, PrintError):
         slp_gs_mgr.toggle_graph_search(self.slp_gs_enable_cb.isChecked())
         self.slp_gs_list_widget.update()
 
+    def slpdb_msg_box(self):
+        # Msg box should only appear if the checkbox is enabled
+        if self.slp_slpdb_enable_cb.isChecked():
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Information)
+            msg.setWindowTitle("SLPDB Validation")
+            msg.setInformativeText(
+                "This is not a trustless validation. You are trusting the "
+                + "result of the servers listed. \n(This disables graph "
+                + "search if enabled)")
+            msg.setDetailedText(
+                "Currently NFTs do not always validate through the graph search, "
+                + "using SLPDB will validate the transactions quickly, at the "
+                + "tradeoff of trusting the servers listed."
+                )
+            msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+            return_value = msg.exec()
+            if return_value == QMessageBox.Ok:
+                # Enable slpdb validation on confirm, else uncheck the box
+                self.use_slp_slpdb()
+            else:
+                self.slp_slpdb_enable_cb.setChecked(False)
+
+    def slpdb_endpoint_msg_box(self):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Information)
+        msg.setWindowTitle("SLPDB Endpoints")
+        msg.setInformativeText(
+            "Additional Endpoints must be added to the servers_slpdb.json"
+            )
+        msg.setDetailedText(
+            "Currently NFTs do not always validate through the graph search, "
+            + "using SLPDB will validate the transactions quickly, at the "
+            + "tradeoff of trusting the servers listed."
+            )
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.exec()
+        
     def use_slp_slpdb(self):
         slp_gs_mgr.toggle_slpdb_validation(self.slp_slpdb_enable_cb.isChecked())
         self.slp_slpdb_list_widget.update()
@@ -1264,7 +1297,7 @@ class NetworkChoiceLayout(QObject, PrintError):
         self.nodes_list_widget.update(self.network, self.servers)
         self.slp_gs_list_widget.update()
         self.slp_gs_server_host.setText(slp_gs_mgr.gs_host)
-        self.slp_sldpb_validation_server_host.setText(slp_gs_mgr.slpdb_host)
+        # self.slp_sldpb_validation_server_host.setText(slp_gs_mgr.slpdb_host)
         self.post_office_list_widget.update()
         self.use_post_office.setChecked(self.config.get('slp_post_office_enabled', False))
         self.slp_gs_enable_cb.setChecked(self.config.get('slp_validator_graphsearch_enabled', False))

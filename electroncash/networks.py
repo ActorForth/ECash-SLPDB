@@ -59,6 +59,7 @@ class MainNet(AbstractNet):
     DEFAULT_PORTS = {'t': '50001', 's': '50002'}
     DEFAULT_SERVERS = _read_json_dict('servers.json')  # DO NOT MODIFY IN CLIENT CODE
     SLP_GS_SERVERS = _read_json_dict('servers_gs.json')
+    SLP_SLPDB_SERVERS = _read_json_dict('servers_slpdb.json')
     POST_OFFICE_SERVERS = _read_json_dict('servers_post_office.json')
     TITLE = 'Electron Cash SLP'
 

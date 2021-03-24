@@ -11,11 +11,8 @@ def query_to_url(query, endpoint):
     query_to_string = json.dumps(query)
     query_b64 = base64.b64encode(query_to_string.encode("utf-8"))
     b64_to_str = str(query_b64)
-    query_path = b64_to_str[2:-1]    
-    print(f"endpoint: {endpoint}", file=sys.stderr)
-    
+    query_path = b64_to_str[2:-1]        
     url = endpoint + query_path
-    print(f"url stuff: {url}", file=sys.stderr)
     return url
 
 def query(txid, endpoint):
@@ -63,12 +60,11 @@ def check_validity(txid):
         result = []
         try:
             result = query(txid, k)
+            if result:
+                if result[0]["slp"]["valid"]:
+                    success_counter += 1
         except:
-            pass
-
-        if result:
-            print(f"valid? : {result[0]['slp']['valid']}")
-            if result[0]["slp"]["valid"]:
-                success_counter += 1
+            continue
+        
     return success_counter    
         

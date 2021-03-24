@@ -238,6 +238,7 @@ class _SlpGraphSearchManager:
 
     @property
     def slpdb_confirmations(self):
+        # stores confirmation value provided by QSlider to determine number of desired validations
         confirmations = self._gui_object().config.get('slp_validator_slpdb_confirmations', 0)
         # handle case for upgraded config key name
         if not confirmations:
@@ -247,7 +248,6 @@ class _SlpGraphSearchManager:
     
     def set_slpdb_confirmations(self, amount):
         self._gui_object().config.set_key('slp_validator_slpdb_confirmations', amount)
-        print(f"new config amount: {self.slpdb_confirmations}")
 
     def _emit_ui_update(self, data):
         if not self.slp_validation_fetch_signal:

@@ -1842,6 +1842,13 @@ class Abstract_Wallet(PrintError, SPVDelegate):
         if self.is_slp: # Only start up validation if SLP enabled
             self.slp_check_validation(tx_hash, tx)
 
+    def revalidate(self, tx_hash, tx):
+        print(f"revalidating: {tx_hash} and tx: {tx}", file=sys.stderr)
+        tti = self.tx_tokinfo[tx_hash]
+        tti['validity'] = 0
+        self.slp_check_validation(tx_hash, tx)
+        slp_gs_mgr.slp_validity_signal.emit(tx_hash, tti['validity'])
+
     def slp_check_validation(self, tx_hash, tx):
         """ Callers are expected to take lock(s). We take no locks """
         tti = self.tx_tokinfo[tx_hash]
@@ -1858,20 +1865,23 @@ class Abstract_Wallet(PrintError, SPVDelegate):
                 tti['validity'] = val
                 slp_gs_mgr.slp_validity_signal.emit(txid, val)
 
+            if slp_gs_mgr.slpdb_validation_enabled:
+                    try:
+                        result = slp_slpdb_validator.check_validity(tx_hash)
+                        if result >= slp_gs_mgr.slpdb_confirmations:
+                            tti['validity'] = 1
+                            return
+                        else:
+                            tti['validity'] = 2
+                            return
+                    except:
+                        pass
+
             if tti['type'] in ['SLP1']:
                 job = self.slp_graph_0x01.make_job(tx, self, self.network,
                                                         debug=2 if is_verbose else 1,  # set debug=2 here to see the verbose dag when running with -v
                                                         reset=False)
             elif tti['type'] in ['SLP65', 'SLP129']:
-                if slp_gs_mgr.slpdb_validation_enabled:
-                    try:
-                        result = slp_slpdb_validator.check_validity(tx_hash)
-                        if result >= slp_gs_mgr.slpdb_confirmations:
-                            tti['validity'] = 1
-                        return
-                    except:
-                        raise(Exception)
-
                 job = self.slp_graph_0x01_nft.make_job(tx, self, self.network, nft_type=tti['type'],
                                                         debug=2 if is_verbose else 1,  # set debug=2 here to see the verbose dag when running with -v
                                                         reset=False)
