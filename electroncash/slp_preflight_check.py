@@ -102,7 +102,7 @@ class SlpPreflightCheck:
             'use_spec_validity_judgement': False     # using safe judgement to avoid any required_burns
         }
 
-        BCHD_NODES = [ host for host in networks.net.SLPDB_SERVERS if networks.net.SLPDB_SERVERS[host]['kind'] == 'bchd']
+        BCHD_NODES = [ host for host in networks.net.SLP_GS_SERVERS if networks.net.SLP_GS_SERVERS[host]['kind'] == 'bchd']
         random.shuffle(BCHD_NODES)
 
         resp = { 'ok': False, 'invalid_reason': 'no bchd nodes available' }

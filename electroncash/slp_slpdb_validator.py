@@ -1,6 +1,7 @@
 import json
 import requests
 import base64
+import sys
 
 from . import networks
 from electroncash.slp_graph_search import slp_gs_mgr
@@ -61,11 +62,12 @@ def check_validity(txid):
         try:
             result = query(txid, k)
             if result:
+                print(f"result: {result}", file=sys.stderr)
                 if result[0]["slp"]["valid"]:
                     success_counter += 1
         except:
             continue
-        finally:
-            return success_counter
+
+    return success_counter
         
         
