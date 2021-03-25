@@ -611,21 +611,17 @@ class SlpSLPDBServeListWidget(QTreeWidget):
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.customContextMenuRequested.connect(self.create_menu)
         
-        if not slp_gs_mgr.slpdb_host and networks.net.SLP_SLPDB_SERVERS:  # Note: testnet4 and scalenet may have empty SLPDB_SERVERS
-            host = next(iter(networks.net.SLP_SLPDB_SERVERS))
-            slp_gs_mgr.set_slpdb_host(host)
-
     def create_menu(self, position):
         item = self.currentItem()
         if not item:
             return
         menu = QMenu()
         server = item.data(0, Qt.UserRole)
-        menu.addAction(_("Use as server"), lambda: self.select_slp_slpdb_server(server))
+        menu.addAction(_("Remove"), lambda: self.update_slp_slpdb_server(server, remove=True))
         menu.exec_(self.viewport().mapToGlobal(position))
 
-    def select_slp_slpdb_server(self, server):
-        self.parent.set_slp_slpdb_server(server)
+    def update_slp_slpdb_server(self, server, add=False, remove=False):
+        self.parent.update_slp_slpdb_server(server, add, remove)
         self.update()
 
     def keyPressEvent(self, event):
@@ -645,12 +641,11 @@ class SlpSLPDBServeListWidget(QTreeWidget):
     def update(self):
         self.clear()
         self.addChild = self.addTopLevelItem
-        slp_slpdb_list = networks.net.SLP_SLPDB_SERVERS
+        slp_slpdb_list = slp_gs_mgr.slpdb_host
         slp_slpdb_count = len(slp_slpdb_list)
-        for k, items in slp_slpdb_list.items():
+        for k in slp_slpdb_list:
             if slp_slpdb_count > 0:
-                star = ' ◀' if k == slp_gs_mgr.slpdb_host else ''
-                x = QTreeWidgetItem([k+star]) #, 'NA'])
+                x = QTreeWidgetItem([k]) #, 'NA'])
                 x.setData(0, Qt.UserRole, k)
                 # x.setData(1, Qt.UserRole, k)
                 self.addTopLevelItem(x)
@@ -951,20 +946,28 @@ class NetworkChoiceLayout(QObject, PrintError):
         self.slp_slpdb_enable_cb.clicked.connect(self.slpdb_msg_box)
         self.slp_slpdb_enable_cb.setChecked(self.config.get('slp_validator_slpdb_validation_enabled', False))
         grid.addWidget(self.slp_slpdb_enable_cb, 0, 0, 1, 3)
-        self.add_slpdb_server_button = QPushButton("Add Endpoint")
-        self.add_slpdb_server_button.setFixedWidth(130)
-        self.add_slpdb_server_button.clicked.connect(self.slpdb_endpoint_msg_box)
-        grid.addWidget(self.add_slpdb_server_button, 1, 0, 1, 1)
 
-
+        hbox = QHBoxLayout()
+        hbox.addWidget(QLabel(_('Server') + ':'))
+        self.slp_slpdb_server_host = QLineEdit()
+        self.slp_slpdb_server_host.setFixedWidth(250)
+        hbox.addWidget(self.slp_slpdb_server_host)
+        hbox.addStretch(1)
+        grid.addLayout(hbox, 1, 0)
+        
         self.slp_slpdb_list_widget = SlpSLPDBServeListWidget(self)
         grid.addWidget(self.slp_slpdb_list_widget, 2, 0, 1, 5)
         self.slp_slpdb_list_widget.update()
         grid.addWidget(QLabel(_("Enter Acceptable Number of Successful Results:")), 3, 0)
+
+        self.add_slpdb_server_button = QPushButton("Add Endpoint")
+        self.add_slpdb_server_button.setFixedWidth(130)
+        self.add_slpdb_server_button.clicked.connect(lambda: self.update_slp_slpdb_server(server=self.slp_slpdb_server_host.text(), add=True))
+        grid.addWidget(self.add_slpdb_server_button, 1, 1, 1, 1)
         
         self.slp_slider = QSlider(Qt.Horizontal)
         self.slp_slider.setValue(slp_gs_mgr.slpdb_confirmations)
-        self.slp_slider.setMaximum(len(networks.net.SLP_SLPDB_SERVERS))
+        self.slp_slider.setMaximum(len(slp_gs_mgr.slpdb_host))
         grid.addWidget(self.slp_slider, 4, 0, 1, 5)
         self.slider_ticker = QLabel(str(slp_gs_mgr.slpdb_confirmations)) 
         grid.addWidget(self.slider_ticker, 3, 1)
@@ -1403,12 +1406,12 @@ class NetworkChoiceLayout(QObject, PrintError):
         slp_gs_mgr.set_gs_host(server)
         self.slp_gs_list_widget.update()
 
-    def set_slp_slpdb_server(self, server=None):
+    def update_slp_slpdb_server(self, server=None, add=False, remove=False):
         if not server:
-            server = str(self.slp_sldpb_validation_server_host.text())
-        else:
-            self.slp_sldpb_validation_server_host.setText(server)
-        slp_gs_mgr.set_slpdb_host(server)
+            return
+        slp_gs_mgr.update_slpdb_host(server, add, remove)
+        self.slp_slider.setMaximum(len(slp_gs_mgr.slpdb_host))
+
         self.slp_slpdb_list_widget.update()
 
     def set_slp_post_office_enabled(self):

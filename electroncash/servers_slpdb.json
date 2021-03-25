@@ -1,5 +1,5 @@
-{
-    "https://slpdb.electroncash.de/q/": {"kind": "slpdb"},
-    "https://slpdb.devops.cash/q/": {"kind": "slpdb"},
-    "https://slpdb.fountainhead.cash/q/": {"kind": "slpdb"}
-}
+[
+    "https://slpdb.electroncash.de/q/",
+    "https://slpdb.devops.cash/q/",
+    "https://slpdb.fountainhead.cash/q/"
+]

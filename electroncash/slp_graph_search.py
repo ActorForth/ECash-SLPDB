@@ -227,14 +227,24 @@ class _SlpGraphSearchManager:
     @property
     def slpdb_host(self):
         host = self._gui_object().config.get('slp_validator_slpdb_host', '')
-        # handle case for upgraded config key name
         if not host:
-            host = self._gui_object().config.get('slp_slpdb_host', '')
-            if not host: self.set_slpdb_host(host)
+            host = networks.net.SLP_SLPDB_SERVERS
+            self.set_slpdb_host(host)
         return host
 
     def set_slpdb_host(self, host):
         self._gui_object().config.set_key('slp_validator_slpdb_host', host)
+        host2 = self._gui_object().config.get('slp_validator_slpdb_host', '')
+
+    def update_slpdb_host(self, endpoint, add=False, remove=False):
+        host = self._gui_object().config.get('slp_validator_slpdb_host', '')
+        if add:
+            host.append(endpoint)
+            self.set_slpdb_host(host)
+        if remove:
+            if endpoint in host:
+                host.remove(endpoint)
+                self.set_slpdb_host(host)
 
     @property
     def slpdb_confirmations(self):

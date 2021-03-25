@@ -1,5 +1,5 @@
-{
-    "https://slpdb-testnet.fountainhead.cash/q/" : {"kind" : "slpdb"},
-    "https://slpdb-testnet.fountainhead.cash/a/" : {"kind" : "slpdb"},
-    "https://slpdb-testnet.fountainhead.cash/b/" : {"kind" : "slpdb"}
-}
+[
+    "https://slpdb-testnet.fountainhead.cash/q/",
+    "https://slpdb-testnet.fountainhead.cash/a/",
+    "https://slpdb-testnet.fountainhead.cash/b/"
+]

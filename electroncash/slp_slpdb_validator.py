@@ -53,10 +53,10 @@ def query(txid, endpoint):
 
 def check_validity(txid):
 
-    slpdb_endpoints = networks.net.SLP_SLPDB_SERVERS
-
+    slpdb_endpoints = slp_gs_mgr.slpdb_host
+    print(f"slpdb endpoints: {slpdb_endpoints}")
     success_counter = 0
-    for k, items in slpdb_endpoints.items():
+    for k in slpdb_endpoints:
         result = []
         try:
             result = query(txid, k)
@@ -65,6 +65,7 @@ def check_validity(txid):
                     success_counter += 1
         except:
             continue
+        finally:
+            return success_counter
         
-    return success_counter    
         
