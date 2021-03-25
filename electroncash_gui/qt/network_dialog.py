@@ -962,7 +962,7 @@ class NetworkChoiceLayout(QObject, PrintError):
 
         self.add_slpdb_server_button = QPushButton("Add Endpoint")
         self.add_slpdb_server_button.setFixedWidth(130)
-        self.add_slpdb_server_button.clicked.connect(lambda: self.update_slp_slpdb_server(server=self.slp_slpdb_server_host.text(), add=True))
+        self.add_slpdb_server_button.clicked.connect(lambda: self.slpdb_endpoint_msg_box())
         grid.addWidget(self.add_slpdb_server_button, 1, 1, 1, 1)
         
         self.slp_slider = QSlider(Qt.Horizontal)
@@ -1129,17 +1129,22 @@ class NetworkChoiceLayout(QObject, PrintError):
     def slpdb_endpoint_msg_box(self):
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Information)
-        msg.setWindowTitle("SLPDB Endpoints")
+        msg.setWindowTitle("Add SLPDB Endpoint")
         msg.setInformativeText(
-            "Additional Endpoints must be added to the servers_slpdb.json"
+            "Are you sure you want to add this endpoint?\n"
+            + self.slp_slpdb_server_host.text()
             )
         msg.setDetailedText(
             "Currently NFTs do not always validate through the graph search, "
             + "using SLPDB will validate the transactions quickly, at the "
             + "tradeoff of trusting the servers listed."
             )
-        msg.setStandardButtons(QMessageBox.Ok)
-        msg.exec()
+        msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        return_value = msg.exec()
+        if return_value == QMessageBox.Ok:
+            self.update_slp_slpdb_server(server=self.slp_slpdb_server_host.text(), add=True)
+        else:
+            return
         
     def use_slp_slpdb(self):
         slp_gs_mgr.toggle_slpdb_validation(self.slp_slpdb_enable_cb.isChecked())
