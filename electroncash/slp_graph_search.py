@@ -300,7 +300,6 @@ class _SlpGraphSearchManager:
 
         # kill the current validator activity
         slp_validator_0x01.shared_context.kill()
-        slp_validator_0x01_nft.shared_context.kill()
 
         # delete all the gs jobs
         self._search_jobs.clear()
