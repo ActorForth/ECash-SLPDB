@@ -55,19 +55,17 @@ def query(txid, endpoint):
 def check_validity(txid):
 
     slpdb_endpoints = slp_gs_mgr.slpdb_host
-    print(f"slpdb endpoints: {slpdb_endpoints}")
     success_counter = 0
     for k in slpdb_endpoints:
         result = []
         try:
             result = query(txid, k)
             if result:
-                print(f"result: {result}", file=sys.stderr)
                 if result[0]["slp"]["valid"]:
                     success_counter += 1
         except:
             continue
-
+        
     return success_counter
         
         

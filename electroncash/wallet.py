@@ -1874,7 +1874,6 @@ class Abstract_Wallet(PrintError, SPVDelegate):
                         tti['validity'] = 2
                         return
                 except Exception as e:
-                    # TODO Makes this a qt error
                     raise Exception(f"Exception: {str(e)}")
 
             if tti['type'] in ['SLP1']:

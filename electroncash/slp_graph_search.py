@@ -249,10 +249,14 @@ class _SlpGraphSearchManager:
     @property
     def slpdb_confirmations(self):
         # stores confirmation value provided by QSlider to determine number of desired validations
-        confirmations = self._gui_object().config.get('slp_validator_slpdb_confirmations', 0)
+        default_confirmations = server_list_count = len(self.slpdb_host)
+        if server_list_count > 1:
+            # possible that one endpoint may be outdated, defaults to n-1
+            default_confirmations = server_list_count-1
+        confirmations = self._gui_object().config.get('slp_validator_slpdb_confirmations', default_confirmations)
         # handle case for upgraded config key name
         if not confirmations:
-            confirmations = self._gui_object().config.get('slp_validator_slpdb_confirmations', 0)
+            confirmations = self._gui_object().config.get('slp_validator_slpdb_confirmations', len(self.slpdb_host))
             if not confirmations: self.set_slpdb_host(confirmations)
         return confirmations
     
@@ -296,6 +300,7 @@ class _SlpGraphSearchManager:
 
         # kill the current validator activity
         slp_validator_0x01.shared_context.kill()
+        slp_validator_0x01_nft.shared_context.kill()
 
         # delete all the gs jobs
         self._search_jobs.clear()

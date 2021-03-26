@@ -968,6 +968,7 @@ class NetworkChoiceLayout(QObject, PrintError):
         self.slp_slider = QSlider(Qt.Horizontal)
         self.slp_slider.setValue(slp_gs_mgr.slpdb_confirmations)
         self.slp_slider.setMaximum(len(slp_gs_mgr.slpdb_host))
+        self.slp_slider.setMinimum(1)
         grid.addWidget(self.slp_slider, 4, 0, 1, 5)
         self.slider_ticker = QLabel(str(slp_gs_mgr.slpdb_confirmations)) 
         grid.addWidget(self.slider_ticker, 3, 1)
@@ -1122,6 +1123,7 @@ class NetworkChoiceLayout(QObject, PrintError):
             return_value = msg.exec()
             if return_value == QMessageBox.Ok:
                 # Enable slpdb validation on confirm, else uncheck the box
+                self.slp_gs_enable_cb.setChecked(False)
                 self.use_slp_slpdb()
             else:
                 self.slp_slpdb_enable_cb.setChecked(False)
