@@ -1102,6 +1102,7 @@ class NetworkChoiceLayout(QObject, PrintError):
 
     def use_slp_gs(self):
         slp_gs_mgr.toggle_graph_search(self.slp_gs_enable_cb.isChecked())
+        self.slp_slpdb_enable_cb.setChecked(False)
         self.slp_gs_list_widget.update()
 
     def slpdb_msg_box(self):
