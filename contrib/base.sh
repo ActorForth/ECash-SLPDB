@@ -196,7 +196,7 @@ export SOURCE_DATE_EPOCH=1530212462
 # If the manifest changed, contrib/build-wine/manifest.xml needs to be updated.
 export PYTHON_VERSION=3.8.7  # Windows, OSX & Linux AppImage use this to determine what to download/build
 export PYTHON_SRC_TARBALL_HASH="ddcc1df16bb5b87aa42ec5d20a5b902f2d088caa269b28e01590f97a798ec50a"  # If you change PYTHON_VERSION above, update this by downloading the tarball manually and doing a sha256sum on it.
-export DEFAULT_GIT_REPO=https://github.com/simpleledger/Electron-Cash-SLP
+export DEFAULT_GIT_REPO=https://github.com/ActorForth/Electron-Cash-SLP
 if [ -z "$GIT_REPO" ] ; then
     # If no override from env is present, use default. Support for overrides
     # for the GIT_REPO has been added to allows contributors to test containers
