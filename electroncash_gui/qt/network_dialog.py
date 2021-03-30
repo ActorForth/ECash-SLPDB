@@ -26,6 +26,7 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+
 import queue
 import socket
 import codecs
@@ -601,7 +602,7 @@ class SlpGsServeListWidget(QTreeWidget):
             self.setCurrentItem(restore_sel)
             self.setAutoScroll(val)
 
-            
+
 class SlpSLPDBServeListWidget(QTreeWidget):
     def __init__(self, parent):
         QTreeWidget.__init__(self)
@@ -944,7 +945,7 @@ class NetworkChoiceLayout(QObject, PrintError):
         grid = QGridLayout(slp_slpdb_tab)
         self.slp_slpdb_enable_cb = QCheckBox(_('Use SLPDB to validate your tx (This will disable Graph Search)'))
         self.slp_slpdb_enable_cb.clicked.connect(self.slpdb_msg_box)
-        self.slp_slpdb_enable_cb.setChecked(self.config.get('slp_validator_slpdb_validation_enabled', False))
+        self.slpdb_is_checked()
         grid.addWidget(self.slp_slpdb_enable_cb, 0, 0, 1, 3)
 
         hbox = QHBoxLayout()
@@ -1129,6 +1130,19 @@ class NetworkChoiceLayout(QObject, PrintError):
             else:
                 self.slp_slpdb_enable_cb.setChecked(False)
 
+    def slpdb_is_checked(self):
+
+        if self.config.get('slp_validator_slpdb_validation_enabled', False):
+
+            if self.config.get('slp_validator_graphsearch_enabled', False):
+
+                self.gs_and_slpdb_checked_msg_box()
+
+            self.slp_slpdb_enable_cb.setChecked(True)
+            return
+
+        self.slp_slpdb_enable_cb.setChecked(False)
+
     def slpdb_endpoint_msg_box(self):
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Information)
@@ -1148,6 +1162,32 @@ class NetworkChoiceLayout(QObject, PrintError):
             self.update_slp_slpdb_server(server=self.slp_slpdb_server_host.text(), add=True)
         else:
             return
+    
+    def gs_and_slpdb_checked_msg_box(self):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Information)
+        msg.setWindowTitle("Pick one validation method")
+        msg.setInformativeText(
+            "It appears that graph search and slpdb validation are both enabled\n"
+            + "Which would you like to use?"
+            )
+        gs_button = msg.addButton(QPushButton("Graph Search"), QMessageBox.YesRole)
+        slpdb_button = msg.addButton(QPushButton("SLPDB"), QMessageBox.NoRole)
+        disable_button = msg.addButton(QPushButton("Disable Both"), QMessageBox.RejectRole)
+        ret = msg.exec()
+        if ret == 0: # gs
+            slp_gs_mgr.toggle_graph_search(True)
+            self.slp_slpdb_enable_cb.setChecked(False)
+        elif ret == 1: # slpdb
+            slp_gs_mgr.toggle_graph_search(False)
+            slp_gs_mgr.toggle_slpdb_validation(True)
+            self.slp_gs_enable_cb.setChecked(False)
+            self.slp_slpdb_enable_cb.setChecked(True)
+        elif ret == 2: # disable
+            slp_gs_mgr.toggle_graph_search(False)
+            self.slp_gs_enable_cb.setChecked(False)
+            self.slp_slpdb_enable_cb.setChecked(False)
+
         
     def use_slp_slpdb(self):
         slp_gs_mgr.toggle_slpdb_validation(self.slp_slpdb_enable_cb.isChecked())
