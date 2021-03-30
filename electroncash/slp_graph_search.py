@@ -300,6 +300,8 @@ class _SlpGraphSearchManager:
 
         # kill the current validator activity
         slp_validator_0x01.shared_context.kill()
+        for wallet in wallets:
+            wallet.slp_graph_0x01_nft.kill()
 
         # delete all the gs jobs
         self._search_jobs.clear()
