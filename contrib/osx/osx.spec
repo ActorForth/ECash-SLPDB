@@ -33,6 +33,8 @@ datas = [
     (home+'electroncash/servers_testnet.json', PYPKG),
     (home+'electroncash/servers_testnet4.json', PYPKG),
     (home+'electroncash/servers_scalenet.json', PYPKG),
+    (home+'electroncash/servers_slpdb.json', PYPKG),
+    (home+'electroncash/servers_slpdb_testnet.json', PYPKG),
     (home+'electroncash/servers_gs.json', PYPKG),
     (home+'electroncash/servers_gs_testnet.json', PYPKG),
     (home+'electroncash/servers_post_office.json', PYPKG),
