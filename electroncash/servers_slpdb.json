@@ -1,5 +1,5 @@
-{
-    "https://bchd-mainnet.electroncash.de": { "kind": "bchd" },
-    "https://bchd.fountainhead.cash": { "kind": "bchd" },
-    "https://gs.fountainhead.cash": { "kind": "gs++" }
-}
+[
+    "https://slpdb.electroncash.de/q/",
+    "https://slpdb.devops.cash/q/",
+    "https://slpdb.fountainhead.cash/q/"
+]

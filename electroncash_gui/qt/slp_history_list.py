@@ -263,4 +263,6 @@ class HistoryList(MyTreeWidget):
             menu.addAction(QIcon(":icons/seal.svg"), _("View invoice"), lambda: self.parent.show_invoice(pr_key))
         if tx_URL:
             menu.addAction(_("View on block explorer"), lambda: webbrowser.open(tx_URL))
+        if self.wallet.get_slp_token_info(tx_hash)['validity'] == 2:
+            menu.addAction(_("Revalidate"), lambda: self.wallet.revalidate(tx_hash, tx))
         menu.exec_(self.viewport().mapToGlobal(position))
