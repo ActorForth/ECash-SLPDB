@@ -203,3 +203,9 @@ Electron Cash - SLP Token Edition
 - RPC commands "getunusedaddress" and "createnewaddress" now return SLP address format in SLP wallets
 - Removed cointext support since this service is no longer available
 - Various other minor bug fixes and improvements
+
+3.7 Updates
+----
+- Add optional SLPDB Validation
+- Add SLPDB tab to Network options
+- Add revalidate option to right click of invalid slp tokens

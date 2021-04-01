@@ -106,7 +106,7 @@ class InstallWizard(QDialog, MessageBoxMixin, BaseWizard):
     def __init__(self, config, app, plugins, storage, partial_title='Install Wizard'):
         BaseWizard.__init__(self, config, storage)
         QDialog.__init__(self, None)
-        self.setWindowTitle('Electron Cash SLP Edition -  ' + _(partial_title))
+        self.setWindowTitle('ECash SLPDB -  ' + _(partial_title))
         self.app = app
         self.config = config
         # Set for base base class
@@ -184,7 +184,7 @@ class InstallWizard(QDialog, MessageBoxMixin, BaseWizard):
         logo = QLabel()
         logo.setPixmap(QPixmap(":icons/slp_logo_hollow.png").scaledToWidth(52))
         logo.setMaximumWidth(52)
-        vbox.addWidget(QLabel(_("<hr><b>NOTE: This version of Electron Cash is SLP token aware.</b>")))
+        vbox.addWidget(QLabel(_("<hr><b>NOTE: This wallet is SLP token aware.</b>")))
         vbox.addWidget(logo)
         vbox.addWidget(QLabel(_("New wallets SLP use m/44'/245'/0' as the address derivation path.") + '\n' \
                                 + _("Funds will not be accessible with non-SLP versions of Electron Cash.")))
@@ -194,7 +194,7 @@ class InstallWizard(QDialog, MessageBoxMixin, BaseWizard):
 
         vbox.addWidget(QLabel(_("For more information visit: <a href=\"https://SimpleLedger.cash\">https://SimpleLedger.cash</a>")))
 
-        self.set_layout(vbox, title=_('Electron Cash SLP wallet'))
+        self.set_layout(vbox, title=_('ECash SLPDB wallet'))
 
         wallet_folder = os.path.dirname(self.storage.path)
 

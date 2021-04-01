@@ -1,0 +1,68 @@
+
+Enable SLPDB Validation
+=========================
+
+1. Navigate to the Network options by selecting Tools, then Network.
+2. Select the SLPDB Validation tab
+3. Enable SLPDB
+
+If you have existing added tokens, that are unvalidated, you may need
+to restart your client before SLPDB validation will take place.
+
+By default, all endpoints will be used, however the slider determines how many
+results are needed for a token to be deemed valid. This defaults to the number
+of endpoints - 1, in the case that an endpoint provided is out of date. If you
+would like more or less "valid" results prior to confirmation, simply adjust
+the slider.
+
+
+Adding additional SLPDB Endpoints
+===================================
+1. Enter the slpdb endpoint in the textfield
+    ex: https://slpdb.fountainhead.cash/q/
+
+2. Click the add button
+3. Confirm
+
+
+Removing SLPDB Endpoints
+==========================
+1. Right click target endpoint you would like to remove
+2. Select remove
+
+
+Help, my tokens still arent validating!
+=======================================
+If your wallet doesnt seem to be validating, it could be running the internal 
+default validation. 
+
+Enable SLPDB in the Network menu, under SLPDB Validation and restart the client.
+
+
+
+Help, my transactions arent showing up!
+========================================
+When importing a wallet, you may need to scan for additional addresses.
+
+1. Navigate to Wallet, then Scan more addresses
+2. Select how many additional addresses to scan (100 is suggested), and scan
+
+If your transactions still arent showing up, increase the number of addresses and
+scan again.
+
+
+
+Invalid tokens
+================
+If for some reason tokens were marked invalid due to an endpoint not being up-to-date,
+you can revalidate an invalid token by right clicking in the SLP History tab and selecting
+"Revalidate".
+
+If this valid transaction is still being marked invalid, you may need to reduce the slider in
+the SLPDB Validation tab of the Network option menu, as an endpoint may not be updated.
+
+
+
+Youtube Guide for validating tokens through SLPDB
+===================================================
+

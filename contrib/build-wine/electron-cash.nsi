@@ -7,9 +7,9 @@
 ;--------------------------------
 ;Variables
 
-  !define PRODUCT_NAME "Electron Cash SLP"
-  !define INTERNAL_NAME "Electron-Cash-SLP"
-  !define PRODUCT_WEB_SITE "https://github.com/simpleledger/Electron-Cash-SLP"
+  !define PRODUCT_NAME "ECash SLPDB"
+  !define INTERNAL_NAME "ECash-SLPDB"
+  !define PRODUCT_WEB_SITE "https://github.com/ActorForth/ECash-SLPDB"
   !define PRODUCT_PUBLISHER "Electron Cash LLC"
   !define INSTDIR_REG_ROOT "HKCU"
   !define INSTDIR_REG_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
