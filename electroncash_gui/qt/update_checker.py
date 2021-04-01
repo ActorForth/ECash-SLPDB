@@ -64,7 +64,7 @@ class UpdateChecker(QWidget, PrintError):
 
     #url = "https://www.c3-soft.com/downloads/BitcoinCash/Electron-Cash/update_check" # Testing URL
     url = "https://raw.github.com/simpleledger/Electron-Cash-SLP/master/contrib/update_checker/releases.json" # Release URL
-    download_url = "https://simpleledger.cash/project/electron-cash-slp-edition/"
+    # download_url = "https://simpleledger.cash/project/electron-cash-slp-edition/"
 
     VERSION_ANNOUNCEMENT_SIGNING_ADDRESSES = (
         address.Address.from_string("bitcoincash:qphax4cg8sxuc0qnzk6sx25939ma7y877uz04s2z82", net=MainNet), # Calin's key

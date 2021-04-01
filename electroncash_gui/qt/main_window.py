@@ -971,8 +971,8 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
             self.show_error(_('No donation address for this server'))
 
     def show_about(self):
-        QMessageBox.about(self, "Electron Cash SLP",
-            "<p><font size=+3><b>Electron Cash SLP</b></font></p><p>" + _("Version") + f" {self.wallet.electrum_version}" + "</p>" +
+        QMessageBox.about(self, "ECash SLPDB",
+            "<p><font size=+3><b>ECash SLPDB</b></font></p><p>" + _("Version") + f" {self.wallet.electrum_version}" + "</p>" +
             '<span style="font-size:11pt; font-weight:500;"><p>' +
             _("Copyright © {year_start}-{year_end} Electron Cash LLC and the Electron Cash developers.").format(year_start=2017, year_end=2021) +
             "</p><p>" + _("darkdetect for macOS © 2019 Alberto Sottile") + "</p>"
@@ -985,7 +985,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
     def show_report_bug(self):
         msg = ' '.join([
             _("Please report any bugs as issues on github:<br/>"),
-            "<a href=https://github.com/simpleledger/Electron-Cash-SLP/issues>https://github.com/simpleledger/Electron-Cash-SLP/issues</a><br/><br/>",
+            "<a href=https://github.com/ActorForth/ECash-SLPDB/issues>https://github.com/ActorForth/ECash-SLPDB/issues</a><br/><br/>",
             _("Before reporting a bug, upgrade to the most recent version of Electron Cash (latest release or git HEAD), and include the version number in your report."),
             _("Try to explain not only what the bug is, but how it occurs.")
          ])

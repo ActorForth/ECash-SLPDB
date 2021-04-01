@@ -259,9 +259,9 @@ class BaseWizard(util.PrintError):
             number = number=len(choices)
             msg = ngettext(
                     '{number} hardware device was detected. '
-                    'However, it is not compatible with Electron Cash SLP.',
+                    'However, it is not compatible with ECash SLPDB.',
                     '{number} hardware devices were detected. '
-                    'However, none of them are compatible with Electron Cash SLP.',
+                    'However, none of them are compatible with ECash SLPDB.',
                     number).format(number=number)
             msg += '\n\n' + _('To trigger a rescan, press \'Next\'.') + '\n'
             run_next = lambda *a,**k: self.choose_hw_device()

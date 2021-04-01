@@ -119,7 +119,7 @@ class App(QWidget):
 
         self.directory_path = None
 
-        self.setWindowTitle('Electron Cash Plugin Packager')
+        self.setWindowTitle('ECash SLPDB Plugin Packager')
         self.setMinimumWidth(500)
         self.setMaximumWidth(500)
 
