@@ -250,8 +250,7 @@ class ValidationJob:
     def run(self,):
         """ Wrapper for mainloop() to manage run state. """
 
-        # Check if we need to reset the graph due to having
-        # nodes in an undetermined state.
+        # Check if we need to reset the graph
         self.graph.maybe_reset()
 
         with self._statelock:
@@ -394,6 +393,7 @@ class ValidationJob:
             if self.debug > 0:
                 print("DEBUG-DAG: SKIPPING: " + txid)
             node = self.graph.get_node(txid)
+            node.graph.gs_skipped = True
             node.set_validity(False, 2)
 
             # temp for debugging
@@ -409,10 +409,17 @@ class ValidationJob:
             # f.write(txid+","+str(self.currentdepth)+",true,\n")
 
             node = self.graph.get_node(txid)
+
+            # try to get validity from wallet cache
             try:
                 val = self.validitycache[txid]
             except KeyError:
                 val = None
+
+            # check the graph's internal validity cache
+            if val == None and txid in self.graph._valid_txids:
+                val = 1
+
             try:
                 node.load_tx(tx, cached_validity=val)
             except DoubleLoadException:
@@ -627,7 +634,7 @@ class ValidationJobManager(PrintError):
             if job in self.all_jobs:
                 raise ValueError
             self.all_jobs.add(job)
-            self.jobs_pending.put((job.height, next(unique), job))
+        self.jobs_pending.put((job.height, next(unique), job))
         self.wakeup.set()
 
     def _stop_all_common(self, job):
@@ -811,7 +818,7 @@ class TokenGraph:
     """
     debugging = False
 
-    def __init__(self, validator):
+    def __init__(self, validator, valid_txids=None):
         self.validator = validator
 
         self._nodes = dict() # txid -> Node
@@ -827,13 +834,19 @@ class TokenGraph:
         # create singletons for pruning
         self.prunednodes = {v:NodeInactive(v, None) for v in validator.validity_states.keys()}
 
+        # internal validity cache when the graph needs reset
+        self.gs_skipped = False
+        self._valid_txids = set()
+        if valid_txids != None:
+            self._valid_txids = valid_txids
+
         # Threading rule: we never call node functions while locked.
         # self._lock = ... # threading not enabled.
 
     def reset(self, ):
         # copy nodes and reset self
         prevnodes = self._nodes
-        TokenGraph.__init__(self, self.validator)
+        TokenGraph.__init__(self, self.validator, self._valid_txids)
 
         # nuke Connections to encourage prompt GC
         for n in prevnodes.values():
@@ -844,14 +857,11 @@ class TokenGraph:
                 pass
 
     # This is used by a ValidationJob to determine if the graph
-    # should be reset.  At the beginning of a validation job
-    # having active nodes with validity==0 causes the job to fail.
+    # should be reset.  If graph search skipped any nodes, then
+    # the graph needs to be reset.
     def maybe_reset(self):
-        nodes = self._nodes.copy()
-        for node in nodes.values():
-            if node.validity == 0 and isinstance(node, Node):
-                self.reset()
-                return
+        if self.gs_skipped:
+            self.reset()
 
     def debug(self, formatstr, *args):
         if self.debugging:
@@ -965,6 +975,11 @@ class TokenGraph:
                 nodes_copy[txid].validity == 1 and \
                     txid not in exclude:
                 candidate_txids.append(txid)
+
+        # join the different validity caches
+        candidate_txids = set(candidate_txids)
+        candidate_txids |= self._valid_txids
+        candidate_txids = list(candidate_txids)
 
         # depending on the number of txids available
         # either return all txids, or return random txids
@@ -1151,6 +1166,10 @@ class Node:
     def _inactivate_self(self, keepinfo, validity):
         # Replace self with NodeInactive instance according to keepinfo and validity
         # no thread locking here, this only gets called internally.
+
+        # if valid then we save as valid internally for graph search resets
+        if validity == 1:
+            self.graph._valid_txids.add(self.txid)
 
         if keepinfo:
             replacement = NodeInactive(validity, self.outputs)
