@@ -1,5 +1,13 @@
-ECash SLPDB - Lightweight Bitcoin Cash client
+ElectronCash SLPDB - Lightweight Bitcoin Cash client
 =====================================
+
+ElectronCash SLPDB (ECSLPDB for "short") is a fork from the ElectronCash SLP project that incorporates requests to SLPDB indexers in order to speedup SLP transactions. This is particularly critical for SLP/NFTs which can take hours or days to confirm ownership of an SLP/NFT since it pulls down every single transaction for that token until its minting genesis. That is the ONLY difference in functionality from the ElectronCash SLP project. This is not intended to be an ongoing project as the ElectronCash SLP codebase has tightly coupled the business logic with the UX and is therefore too expensive to extend. Hopefully the core ElectronCash project will do their own SLP implementation and this fork can be abandoned. 
+
+Using ECSLPDB's SLPDB capabilities makes it no longer completely trustless. You are now trusting that the SLPDB instance(s) it references are honest. For that reason we make the default behavior require matched responses from multiple SLPDB instances before the wallet confirms token ownership. To gain full trustless yet high performance operations it is recommended you operate your own node with an SLPDB indexer. We recommend using the BCH-Toolkit setup we have created to make such deployments fast and easy. See the BCH-Toolkit project for more details at https://github.com/ActorForth/bch-toolkit .
+
+NOTE: This project has nothing whatsoever to do with the old "Bitcoin ABC" project which both ineffectually and confusingly renamed itself to ECash - quite a while after this project fork from ElectronCash had already happened. Thanks to "Rowan Skye" for pointing this confusion out to us.
+
+
 Contact us at our gitter: <https://gitter.im/ActorForth/community>
 
 
