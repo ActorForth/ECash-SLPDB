@@ -43,6 +43,7 @@ class AbstractNet:
     LEGACY_POW_RETARGET_BLOCKS = LEGACY_POW_TARGET_TIMESPAN // LEGACY_POW_TARGET_INTERVAL  # 2016 blocks
     BASE_UNITS = {'BCH': 8, 'mBCH': 5, 'bits': 2}
     DEFAULT_UNIT = "BCH"
+    SLP_PREFLIGHT_CHECK = True  # pings other node implementations in the slp network before signing
 
 
 class MainNet(AbstractNet):
@@ -161,6 +162,8 @@ class TestNet4(TestNet):
     asert_daa = ASERTDaa(is_testnet=True)  # Redeclare to get instance for this subclass
     asert_daa.anchor = Anchor(height=16844, bits=486604799, prev_time=1605451779)
 
+    # disable slp pre-flight since this is a testnet with no known slp network servers
+    SLP_PREFLIGHT_CHECK = False
 
 
 class ScaleNet(TestNet):
@@ -188,6 +191,8 @@ class ScaleNet(TestNet):
     asert_daa = ASERTDaa(is_testnet=False)  # Despite being a "testnet", ScaleNet uses 2d half-life
     asert_daa.anchor = None  # Intentionally not specified because it's after checkpoint; blockchain.py will calculate
 
+    # disable slp pre-flight since this is a testnet with no known slp network servers
+    SLP_PREFLIGHT_CHECK = False
 
 # All new code should access this to get the current network config.
 net = MainNet

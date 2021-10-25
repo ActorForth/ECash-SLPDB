@@ -416,6 +416,7 @@ class SlpSearchJobListWidget(QTreeWidget):
         menu = QMenu()
         menu.addAction(_("Copy Txid"), lambda: self._copy_txid_to_clipboard())
         menu.addAction(_("Copy Reversed Txid"), lambda: self._copy_txid_to_clipboard(True))
+        menu.addAction(_("Copy Status"), lambda: self._copy_status_to_clipboard())
         menu.addAction(_("Refresh List"), lambda: self.update())
         txid = item.data(0, Qt.UserRole)
         if item.data(4, Qt.UserRole) in ['Exited']:
@@ -429,6 +430,10 @@ class SlpSearchJobListWidget(QTreeWidget):
         if flip_bytes:
             txid = codecs.encode(codecs.decode(txid,'hex')[::-1], 'hex').decode()
         qApp.clipboard().setText(txid)
+
+    def _copy_status_to_clipboard(self, flip_bytes=False):
+        status = self.currentItem().data(4, Qt.UserRole)
+        qApp.clipboard().setText(status)
 
     def restart_job(self, txid):
         job = slp_gs_mgr.find(txid)
@@ -504,7 +509,7 @@ class SlpSearchJobListWidget(QTreeWidget):
                 x = QTreeWidgetItem([job.root_txid[:6], tx_count, self.humanbytes(job.gs_response_size), str(job.validity_cache_size), status + exit_msg])
                 x.setData(0, Qt.UserRole, k)
                 x.setData(3, Qt.UserRole, job.validity_cache_size)
-                x.setData(4, Qt.UserRole, status)
+                x.setData(4, Qt.UserRole, status + exit_msg)
                 if status == 'Downloading...':
                     working_item = x
                 elif status == "Downloaded":

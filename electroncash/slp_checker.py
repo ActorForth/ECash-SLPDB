@@ -1,6 +1,6 @@
 import json
 from .util import NotEnoughFundsSlp, NotEnoughUnfrozenFundsSlp, print_error
-from . import slp
+from . import slp, networks
 from .slp import SlpParsingError, SlpInvalidOutputMessage, SlpUnsupportedSlpTokenType
 from .slp_preflight_check import SlpPreflightCheck
 from .transaction import Transaction
@@ -250,10 +250,11 @@ class SlpTransactionChecker:
                             raise BadSlpOutpointType('Transaction token receiver vout is not P2PKH' \
                                                         + ' or P2SH output type')
 
-        # perform slp pre-flight check before signing (this check run here and also at signing)
-        slp_preflight = SlpPreflightCheck.query(tx, selected_slp_coins=coins_to_burn, amt_to_burn=amt_to_burn)
-        if not slp_preflight['ok']:
-            raise Exception("slp pre-flight check failed: %s\n\n(node: %s)"%(slp_preflight.get('invalid_reason', json.dumps(slp_preflight)), slp_preflight['node']))
+        # perform slp pre-flight check
+        if networks.net.SLP_PREFLIGHT_CHECK:
+            slp_preflight = SlpPreflightCheck.query(tx, selected_slp_coins=coins_to_burn, amt_to_burn=amt_to_burn)
+            if not slp_preflight['ok']:
+                raise Exception("slp pre-flight check failed: %s\n\n(node: %s)"%(slp_preflight.get('invalid_reason', json.dumps(slp_preflight)), slp_preflight['node']))
 
         # return True if this check passes
         print_error("Final SLP check passed")

@@ -79,7 +79,6 @@ from .util import *
 import electroncash.slp as slp
 from electroncash.slp_coinchooser import SlpCoinChooser
 from electroncash.slp_checker import SlpTransactionChecker
-from electroncash.slp_preflight_check import SlpPreflightCheck
 from .amountedit import SLPAmountEdit
 from electroncash.util import format_satoshis_nofloat
 from .slp_create_token_genesis_dialog import SlpCreateTokenGenesisDialog
